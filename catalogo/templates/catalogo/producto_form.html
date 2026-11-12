@@ -1,0 +1,30 @@
+{% extends "catalogo/base.html" %}
+
+{% block title %}Producto | Catálogo{% endblock %}
+{% block page_title %}{% if object %}Editar producto{% else %}Nuevo producto{% endif %}{% endblock %}
+
+{% block content %}
+<section class="form-card">
+    <div class="section-heading">
+        <div>
+            <h2>{% if object %}Actualizar información{% else %}Registrar producto{% endif %}</h2>
+            <p>Completa los datos del producto.</p>
+        </div>
+    </div>
+    <form method="post" class="product-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <label>
+                <span>{{ field.label }}</span>
+                {{ field }}
+                {% for error in field.errors %}<small class="form-error">{{ error }}</small>{% endfor %}
+            </label>
+        {% endfor %}
+        <div class="form-actions">
+            <a class="button button-ghost" href="{% url 'catalogo:catalogo' %}">Cancelar</a>
+            <button class="button button-primary" type="submit">Guardar producto</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

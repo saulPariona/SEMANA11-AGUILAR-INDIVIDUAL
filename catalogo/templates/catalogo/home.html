@@ -1,0 +1,9 @@
+{% extends "catalogo/base.html" %}
+
+{% block title %}Inicio | Catálogo{% endblock %}
+
+{% block content %}
+    <h2>Bienvenido</h2>
+    <p>Explora nuestro catálogo de productos.</p>
+    <p><a href="{% url 'catalogo:catalogo' %}">Ver productos</a></p>
+{% endblock %}

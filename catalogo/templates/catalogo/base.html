@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalogo/styles.css' %}">
+    <title>{% block title %}Catálogo{% endblock %}</title>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-mark">C</span>
+                <span>CATÁLOGO</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'catalogo:home' %}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2.25 12 9.75-9 9.75 9M4.5 9.92V21h15V9.92M9 21v-6h6v6"/></svg>
+                    Inicio
+                </a>
+                <a class="active" href="{% url 'catalogo:catalogo' %}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4.5h18v15H3zM3 9h18M8 4.5v4.5M16 4.5v4.5"/></svg>
+                    Catálogo
+                </a>
+                <a href="{% url 'catalogo:productos-api' %}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16M7 5v.01M7 12v.01M7 19v.01"/></svg>
+                    API JSON
+                </a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">Gestión de inventario</p>
+                    <h1>{% block page_title %}Catálogo de productos{% endblock %}</h1>
+                </div>
+                <a class="button button-primary" href="{% url 'catalogo:producto-nuevo' %}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    Nuevo producto
+                </a>
+            </header>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

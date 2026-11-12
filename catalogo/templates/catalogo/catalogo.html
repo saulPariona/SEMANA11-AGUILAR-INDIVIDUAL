@@ -1,0 +1,88 @@
+{% extends "catalogo/base.html" %}
+
+{% block title %}Productos | Catálogo{% endblock %}
+{% block page_title %}Productos{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <h2>Lista de productos</h2>
+        <p>{{ productos|length }} resultado{{ productos|length|pluralize }} de {{ total_productos }}</p>
+    </div>
+    <a class="api-link" href="{% url 'catalogo:productos-api' %}">Ver respuesta JSON →</a>
+</section>
+
+<section class="filter-card">
+    <form method="get" class="filters">
+        <label class="search-field">
+            <span class="sr-only">Buscar producto</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+            <input type="search" name="q" value="{{ filtros.q|default:'' }}" placeholder="Nombre o SKU del producto">
+        </label>
+        <label>
+            <span>Categoría</span>
+            <select name="categoria">
+                <option value="">Todas</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria }}" {% if filtros.categoria == categoria %}selected{% endif %}>{{ categoria }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            <span>Estado</span>
+            <select name="estado">
+                <option value="">Todos</option>
+                <option value="activo" {% if filtros.estado == "activo" %}selected{% endif %}>Activo</option>
+                <option value="inactivo" {% if filtros.estado == "inactivo" %}selected{% endif %}>Inactivo</option>
+            </select>
+        </label>
+        <label class="check-label">
+            <input type="checkbox" name="stock_bajo" value="1" {% if filtros.stock_bajo == "1" %}checked{% endif %}>
+            Stock bajo (≤ 3)
+        </label>
+        <button class="button button-secondary" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+            Filtrar
+        </button>
+        <a class="clear-link" href="{% url 'catalogo:catalogo' %}">Limpiar</a>
+    </form>
+</section>
+
+<section class="table-card">
+    <div class="table-header">
+        <span>Producto</span>
+        <span>Categoría</span>
+        <span>Precio</span>
+        <span>Stock</span>
+        <span>Estado</span>
+        <span>Acciones</span>
+    </div>
+    {% for producto in productos %}
+    <article class="product-row">
+        <div class="product-name">
+            <span class="product-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM4 7.5l8 4.5 8-4.5M12 12v9"/></svg>
+            </span>
+            <div>
+                <strong>{{ producto.nombre|title }}</strong>
+                <small>{{ producto.sku|default:"Sin SKU" }}</small>
+            </div>
+        </div>
+        <span>{{ producto.categoria }}</span>
+        <span>S/ {{ producto.precio }}</span>
+        <span class="{% if producto.stock <= 3 %}stock-low{% endif %}">{{ producto.stock }}</span>
+        <span><span class="status {% if producto.disponible %}status-active{% else %}status-inactive{% endif %}">{% if producto.disponible %}Activo{% else %}Inactivo{% endif %}</span></span>
+        <div class="actions">
+            <a class="icon-button" href="{% url 'catalogo:producto-editar' producto.pk %}" title="Editar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16.86 3.49 3.65 3.65M4 20l3.75-.75L19.6 7.4a2.58 2.58 0 0 0-3.65-3.65L4.1 15.6z"/></svg>
+            </a>
+            <a class="icon-button danger" href="{% url 'catalogo:producto-eliminar' producto.pk %}" title="Eliminar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
+            </a>
+        </div>
+    </article>
+    {% empty %}
+        <div class="empty-state">No se encontraron productos con esos filtros.</div>
+    {% endfor %}
+</section>
+{% endblock %}
